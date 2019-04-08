@@ -23,10 +23,11 @@ AddressBook.prototype.findContact = function(id){
   return false;
 };
 AddressBook.prototype.deleteContact = function(id){
-  for(var c = 0; c < this.contacts.length; i++){
-    if(this.contacts[i]){
-      if(this.contacts[i].id == id){
-        delete this.contacts[i];
+  for(var c = 0; c < this.contacts.length; c++){
+    if(this.contacts[c]){
+      if(this.contacts[c].id == id){
+        delete this.contacts[c];
+
         return true;
       }
     }
@@ -44,11 +45,29 @@ Contact.prototype.fullName = function(){
   return this.firstName + " " + this.lastName;
 };
 
+
+function printContact (printAddress){
+  var contactList  = $("ul#contacts");
+  var htmlForContactInfo = "";
+  printAddress.contacts.forEach(function(contact){
+    htmlForContactInfo += "<li id =" + contact.id + ">" +contact.firstName + " " + contact.lastName + "</li>";
+  });
+  contactList.html(htmlForContactInfo);
+};
+function attachContactListeners() {
+  $("ul#contacts").on("click", "li", function() {
+     addressBook.deleteContact(this.id);
+     console.log(addressBook);
+   });
+
+};
+
+
 var addressBook = new AddressBook();
 
 
 $(function () {
-
+    attachContactListeners();
     $("form#new-contact").submit(function (event) {
         event.preventDefault();
 
@@ -57,7 +76,10 @@ $(function () {
         var inputtedPhoneNumber = $('input#new-phone-number').val();
         var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber);
         addressBook.addContact(newContact);
-        console.log(addressBook.contacts);
+        // console.log(newContact);
+        printContact(addressBook);
+
+
 
 
     });
