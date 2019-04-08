@@ -45,6 +45,19 @@ Contact.prototype.fullName = function(){
   return this.firstName + " " + this.lastName;
 };
 
+function showContact(contactId) {
+  var contact = addressBook.findContact(contactId);
+  $("#show-contact").show();
+  $(".first-name").html(contact.firstName);
+  $(".last-name").html(contact.lastName);
+  $(".phone-number").html(contact.phoneNumber);
+  var buttons = $("#buttons");
+  buttons.empty();
+  buttons.append("<button class='deleteButton' id=" +  + contact.id + ">Delete</button>");
+
+}
+
+
 
 function printContact (printAddress){
   var contactList  = $("ul#contacts");
@@ -54,11 +67,20 @@ function printContact (printAddress){
   });
   contactList.html(htmlForContactInfo);
 };
+
 function attachContactListeners() {
+  // $("ul#contacts").on("click", "li", function() {
+  //    addressBook.deleteContact(this.id);
+  //    console.log(addressBook);
+  //  });
+  $("#buttons").on("click", ".deleteButton", function() {
+   addressBook.deleteContact(this.id);
+   $("#show-contact").hide();
+   printContact(addressBook);
+ });
   $("ul#contacts").on("click", "li", function() {
-     addressBook.deleteContact(this.id);
-     console.log(addressBook);
-   });
+   showContact(this.id);     // <--- This is new!
+  });
 
 };
 
